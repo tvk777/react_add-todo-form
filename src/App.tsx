@@ -4,8 +4,17 @@ import todosFromServer from './api/todos';
 import usersFromServer from './api/users';
 import { NewTodo } from './components/NewTodo/NewTodo';
 import { TodoList } from './components/TodoList/TodoList';
-import { getUserById } from './utils/functions';
-import { Todo } from './utils/types';
+import { Todo, User } from './utils/types';
+
+export const getUserById = (userId: number): User => {
+  const users = usersFromServer.find(user => user.id === userId);
+
+  if (!users) {
+    throw new Error(`User with id ${userId} not found`);
+  }
+
+  return users;
+};
 
 export const initialToDos: Todo[] = todosFromServer.map(todo => ({
   ...todo,

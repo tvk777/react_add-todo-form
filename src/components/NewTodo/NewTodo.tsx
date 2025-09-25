@@ -20,10 +20,7 @@ export const NewTodo: FC<Props> = ({ onAdd, users }) => {
     switch (field) {
       case 'userId':
         setUserId(+value);
-        if (+value !== 0) {
-          setUserError('');
-        }
-
+        setUserError('');
         break;
       case 'title':
         const sanitizedTitle = value.replace(
@@ -32,10 +29,7 @@ export const NewTodo: FC<Props> = ({ onAdd, users }) => {
         );
 
         setTitle(sanitizedTitle);
-        if (sanitizedTitle.trim()) {
-          setTitleError('');
-        }
-
+        setTitleError('');
         break;
       default:
         break;
@@ -69,7 +63,11 @@ export const NewTodo: FC<Props> = ({ onAdd, users }) => {
   return (
     <form action="/api/todos" method="POST" onSubmit={handleSubmit}>
       <div className="field">
+        <label className="label" htmlFor="todo-title">
+          Title:
+        </label>
         <input
+          id="todo-title"
           type="text"
           data-cy="titleInput"
           value={title}
@@ -80,7 +78,12 @@ export const NewTodo: FC<Props> = ({ onAdd, users }) => {
       </div>
 
       <div className="field">
+        <label className="label" htmlFor="todo-user">
+          User:
+        </label>
+
         <select
+          id="todo-user"
           data-cy="userSelect"
           value={userId}
           onChange={event => handleChange(event, 'userId')}
