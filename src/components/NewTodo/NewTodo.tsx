@@ -1,12 +1,11 @@
 import { FC, FormEvent, useState } from 'react';
-import { Todo } from '../../utils/types';
-import { getUserById } from '../../utils/functions';
-import usersFromServer from '../../api/users';
+import { User } from '../../utils/types';
 
 type Props = {
-  onAdd: (newTodo: Todo) => void;
+  onAdd: (title: string, userId: number) => void;
+  users: User[];
 };
-export const NewTodo: FC<Props> = ({ onAdd }) => {
+export const NewTodo: FC<Props> = ({ onAdd, users }) => {
   const [title, setTitle] = useState('');
   const [titleError, setTitleError] = useState('');
   const [userId, setUserId] = useState(0);
@@ -46,7 +45,9 @@ export const NewTodo: FC<Props> = ({ onAdd }) => {
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
 
-    if (!title.trim()) {
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle) {
       setTitleError('Please enter a title');
     }
 
@@ -54,18 +55,15 @@ export const NewTodo: FC<Props> = ({ onAdd }) => {
       setUserError('Please choose a user');
     }
 
-    if (!title || !userId) {
+    if (!trimmedTitle || userId === 0) {
       return;
     }
 
-    onAdd({
-      id: 0,
-      title: title.trim(),
-      completed: false,
-      user: getUserById(userId),
-    });
+    onAdd(trimmedTitle, userId);
     setTitle('');
     setUserId(0);
+    setTitleError('');
+    setUserError('');
   };
 
   return (
@@ -88,7 +86,7 @@ export const NewTodo: FC<Props> = ({ onAdd }) => {
           onChange={event => handleChange(event, 'userId')}
         >
           <option value={0}>Choose a user</option>
-          {usersFromServer.map(user => (
+          {users.map(user => (
             <option key={user.id} value={user.id}>
               {user.name}
             </option>
